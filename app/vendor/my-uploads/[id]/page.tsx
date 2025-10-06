@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Download, ArrowLeft } from 'lucide-react'
+import { Download, ArrowLeft, FileText, HardDrive, Calendar, Hash, Package } from 'lucide-react'
 import { toast } from 'sonner'
 
 type FileRecord = {
@@ -38,7 +38,6 @@ export default function ViewFilesPage() {
     try {
       const uploadId = params.id as string
 
-      // Get upload details
       const { data: uploadData, error: uploadError } = await supabase
         .from('uploads')
         .select('part_number, part_name, upload_date')
@@ -49,10 +48,13 @@ export default function ViewFilesPage() {
 
       setUploadDetails({
         ...uploadData,
-        upload_date: new Date(uploadData.upload_date).toLocaleDateString()
+        upload_date: new Date(uploadData.upload_date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
       })
 
-      // Get files
       const { data: filesData, error: filesError } = await supabase
         .from('files')
         .select('*')
@@ -101,57 +103,127 @@ export default function ViewFilesPage() {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
   }
 
+  const getFileIcon = (fileType: string) => {
+    if (fileType.includes('pdf')) return '📄'
+    if (fileType.includes('image')) return '🖼️'
+    return '📁'
+  }
+
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading files...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-4">
-      <Button variant="ghost" onClick={() => router.back()}>
+    <div className="max-w-6xl mx-auto">
+      {/* Back Button */}
+      <Button 
+        variant="ghost" 
+        onClick={() => router.back()}
+        className="mb-6 hover:bg-slate-100"
+      >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to My Uploads
       </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Files for {uploadDetails?.part_number}</CardTitle>
+      {/* Part Details Card */}
+      <Card className="mb-6 shadow-lg border-slate-200">
+        <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-slate-50">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex items-center justify-center w-14 h-14 bg-blue-600 rounded-xl shadow-md">
+                <Package className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl mb-2">{uploadDetails?.part_number}</CardTitle>
+                <CardDescription className="text-base">
+                  {uploadDetails?.part_name}
+                </CardDescription>
+                <div className="flex items-center gap-2 mt-3 text-sm text-slate-600">
+                  <Calendar className="w-4 h-4" />
+                  <span>Uploaded on {uploadDetails?.upload_date}</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold">
+                <FileText className="w-4 h-4" />
+                {files.length} File{files.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
+      {/* Files Table */}
+      <Card className="shadow-lg border-slate-200">
+        <CardHeader className="border-b border-slate-100 bg-slate-50">
+          <CardTitle>Attached Files</CardTitle>
           <CardDescription>
-            {uploadDetails?.part_name} • Uploaded on {uploadDetails?.upload_date}
+            All documentation and drawings for this part
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {files.length === 0 ? (
-            <p className="text-center text-slate-500 py-8">No files found</p>
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-8 h-8 text-slate-400" />
+              </div>
+              <p className="text-slate-600 font-medium">No files found</p>
+            </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>File Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Size</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {files.map((file) => (
-                  <TableRow key={file.id}>
-                    <TableCell className="font-medium">{file.file_name}</TableCell>
-                    <TableCell>{file.file_type || 'Unknown'}</TableCell>
-                    <TableCell>{formatFileSize(file.file_size)}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadFile(file.file_url, file.file_name)}
-                      >
-                        <Download className="w-4 h-4 mr-2" />
-                        Download
-                      </Button>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-slate-50 hover:bg-slate-50">
+                    <TableHead className="font-semibold">File Name</TableHead>
+                    <TableHead className="font-semibold">Type</TableHead>
+                    <TableHead className="font-semibold">Size</TableHead>
+                    <TableHead className="text-right font-semibold">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {files.map((file) => (
+                    <TableRow key={file.id} className="hover:bg-slate-50">
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{getFileIcon(file.file_type)}</span>
+                          <span className="font-medium text-slate-900">{file.file_name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="inline-flex px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md text-xs font-medium">
+                          {file.file_type || 'Unknown'}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 text-slate-600">
+                          <HardDrive className="w-4 h-4" />
+                          {formatFileSize(file.file_size)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => downloadFile(file.file_url, file.file_name)}
+                          className="hover:bg-green-50 hover:text-green-700 hover:border-green-300"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
