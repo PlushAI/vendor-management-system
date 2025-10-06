@@ -722,7 +722,23 @@ For questions or issues:
 
 ## Version History
 
-### v1.0.0 (Current)
+### v1.1.0 (Current)
+**Date**: October 7, 2025  
+**Changes**:
+- Fixed Tailwind CSS configuration (migrated from v4 beta to stable v3)
+- Implemented professional corporate design system
+- Added responsive layouts optimized for desktop and mobile
+- Enhanced UI with proper spacing, colors, and visual hierarchy
+- Added statistics cards on vendor and manager dashboards
+- Improved navigation with active state indicators
+- Enhanced file upload interface with better visual feedback
+
+**Technical Updates**:
+- Switched from Tailwind CSS v4 (beta) to v3.4.1 (stable)
+- Removed Turbopack from dev scripts for better compatibility
+- Created proper `tailwind.config.js` and `postcss.config.js`
+
+### v1.0.0 
 - ✅ Complete MVP with all core features
 - ✅ Vendor and Manager portals
 - ✅ File upload and download
