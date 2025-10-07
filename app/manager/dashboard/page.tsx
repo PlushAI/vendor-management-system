@@ -11,6 +11,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Eye, Filter, X, Building2, Package, Files, TrendingUp, Calendar, Hash, FileText, Search } from 'lucide-react'
 
+type RawUpload = {
+  id: string
+  vendor_id: string
+  part_number: string
+  part_name: string
+  upload_date: string
+  users?: { company_name?: string }
+  files: Array<{ count: number }>
+}
+
 type Upload = {
   id: string
   part_number: string
@@ -68,7 +78,7 @@ export default function ManagerDashboardPage() {
 
       if (uploadsError) throw uploadsError
 
-      const formattedUploads = uploadsData.map((upload: Record<string, any>) => ({
+      const formattedUploads = (uploadsData as RawUpload[]).map((upload) => ({
         id: upload.id,
         part_number: upload.part_number,
         part_name: upload.part_name,

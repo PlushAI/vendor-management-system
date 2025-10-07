@@ -16,6 +16,14 @@ type Upload = {
   file_count: number
 }
 
+type RawUpload = {
+  id: string
+  part_number: string
+  part_name: string
+  upload_date: string
+  files: Array<{ count: number }>
+}
+
 export default function MyUploadsPage() {
   const router = useRouter()
   const [uploads, setUploads] = useState<Upload[]>([])
@@ -38,7 +46,7 @@ export default function MyUploadsPage() {
 
       if (error) throw error
 
-      const formattedUploads = uploadsData.map((upload: Record<string, any>) => ({
+      const formattedUploads = (uploadsData as RawUpload[]).map((upload) => ({
         id: upload.id,
         part_number: upload.part_number,
         part_name: upload.part_name,
