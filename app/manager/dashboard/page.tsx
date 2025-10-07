@@ -72,7 +72,7 @@ export default function ManagerDashboardPage() {
         id: upload.id,
         part_number: upload.part_number,
         part_name: upload.part_name,
-        vendor_name: upload.users?.company_name || 'Unknown',
+        vendor_name: (upload.users as { company_name?: string })?.company_name || 'Unknown',
         vendor_id: upload.vendor_id,
         upload_date: upload.upload_date,
         file_count: upload.files[0]?.count || 0

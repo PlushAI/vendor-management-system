@@ -61,7 +61,7 @@ export default function ManagerViewFilesPage() {
           month: 'long',
           day: 'numeric'
         }),
-        vendor_name: (uploadData.users as any)?.company_name || 'Unknown'
+        vendor_name: (uploadData.users as { company_name?: string })?.company_name || 'Unknown'
       })
 
       const { data: filesData, error: filesError } = await supabase

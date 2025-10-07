@@ -45,8 +45,9 @@ export default function VendorLayout({
 
       setUser(userData)
     } catch (error: unknown) {
-      router.push('/')
-    } finally {
+  console.error('Authentication error:', error)
+  router.push('/')
+} finally {
       setLoading(false)
     }
   }

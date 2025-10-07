@@ -142,7 +142,7 @@ export default function MyUploadsPage() {
         <CardHeader className="border-b border-slate-100 bg-slate-50">
           <CardTitle>Upload History</CardTitle>
           <CardDescription>
-            All parts you've uploaded with their associated files
+            All parts you have uploaded with their associated files
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
