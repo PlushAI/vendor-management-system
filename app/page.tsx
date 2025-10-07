@@ -43,9 +43,10 @@ export default function LoginPage() {
       } else {
         router.push('/manager/dashboard')
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Invalid credentials. Please try again.')
-    } finally {
+    } catch (error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : 'Invalid credentials. Please try again.'
+  toast.error(errorMessage)
+} finally {
       setLoading(false)
     }
   }

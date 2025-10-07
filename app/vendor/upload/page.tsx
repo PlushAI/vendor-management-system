@@ -69,9 +69,10 @@ export default function VendorUploadPage() {
       const fileInput = document.getElementById('file-upload') as HTMLInputElement
       if (fileInput) fileInput.value = ''
       
-    } catch (error: any) {
-      toast.error(error.message || 'Upload failed')
-    } finally {
+    } catch (error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : 'Upload failed'
+  toast.error(errorMessage)
+} finally {
       setUploading(false)
     }
   }
@@ -187,7 +188,7 @@ export default function VendorUploadPage() {
         </CardContent>
       </Card>
 
-      {/* Help Text */}
+{/* Help Text */}
       <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
         <h3 className="text-sm font-semibold text-blue-900 mb-2">Upload Tips</h3>
         <ul className="text-sm text-blue-800 space-y-1">

@@ -38,7 +38,7 @@ export default function MyUploadsPage() {
 
       if (error) throw error
 
-      const formattedUploads = uploadsData.map((upload: any) => ({
+      const formattedUploads = uploadsData.map((upload: Record<string, any>) => ({
         id: upload.id,
         part_number: upload.part_number,
         part_name: upload.part_name,

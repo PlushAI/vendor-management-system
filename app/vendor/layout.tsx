@@ -43,7 +43,7 @@ export default function VendorLayout({
       }
 
       setUser(userData)
-    } catch (error) {
+    } catch (error: unknown) {
       router.push('/')
     } finally {
       setLoading(false)
