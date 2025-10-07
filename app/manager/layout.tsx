@@ -19,8 +19,9 @@ export default function ManagerLayout({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    checkUser()
-  }, [])
+  checkUser()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [])
 
   const checkUser = async () => {
     try {
@@ -43,9 +44,10 @@ export default function ManagerLayout({
       }
 
       setUser(userData)
-    } catch (error) {
-      router.push('/')
-    } finally {
+    } catch (error: unknown) {
+  console.error('Authentication error:', error)
+  router.push('/')
+} finally {
       setLoading(false)
     }
   }

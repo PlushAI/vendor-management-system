@@ -43,8 +43,9 @@ export default function ManagerDashboardPage() {
   }, [])
 
   useEffect(() => {
-    applyFilters()
-  }, [uploads, selectedVendor, partNumberSearch, dateFrom, dateTo])
+  applyFilters()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [uploads, selectedVendor, partNumberSearch, dateFrom, dateTo])
 
   const fetchData = async () => {
     try {
@@ -67,7 +68,7 @@ export default function ManagerDashboardPage() {
 
       if (uploadsError) throw uploadsError
 
-      const formattedUploads = uploadsData.map((upload: any) => ({
+      const formattedUploads = uploadsData.map((upload: Record<string, any>) => ({
         id: upload.id,
         part_number: upload.part_number,
         part_name: upload.part_name,
@@ -78,7 +79,7 @@ export default function ManagerDashboardPage() {
       }))
 
       setUploads(formattedUploads)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error fetching data:', error)
     } finally {
       setLoading(false)

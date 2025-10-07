@@ -32,8 +32,9 @@ export default function ManagerViewFilesPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchFiles()
-  }, [])
+  fetchFiles()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [])
 
   const fetchFiles = async () => {
     try {
@@ -71,7 +72,7 @@ export default function ManagerViewFilesPage() {
       if (filesError) throw filesError
 
       setFiles(filesData)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error fetching files:', error)
       toast.error('Failed to load files')
     } finally {
@@ -97,7 +98,7 @@ export default function ManagerViewFilesPage() {
       URL.revokeObjectURL(url)
 
       toast.success('File downloaded successfully')
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error downloading file:', error)
       toast.error('Failed to download file')
     }

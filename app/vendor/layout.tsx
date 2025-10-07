@@ -19,8 +19,9 @@ export default function VendorLayout({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    checkUser()
-  }, [])
+  checkUser()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [])
 
   const checkUser = async () => {
     try {

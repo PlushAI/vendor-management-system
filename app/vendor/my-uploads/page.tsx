@@ -51,7 +51,7 @@ export default function MyUploadsPage() {
       }))
 
       setUploads(formattedUploads)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error fetching uploads:', error)
     } finally {
       setLoading(false)
